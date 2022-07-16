@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <style>
+    #subjects {
+      display: flex;
+      justify-content: center;
+      height: 100vh;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    #subjects div {
+      border-radius: 10px;
+      margin-right: 16px;
+      padding: 10px 12px;
+      background: rgb(245, 242, 206);
+      box-shadow: 2px 2px 8px rgba(203, 202, 202, 0.807);
+    }
+
+    #subjects div h3,
+    p {
+      color: rgb(19, 19, 64);
+      text-align: center;
+    }
+  </style>
+
+  <body>
+    <div id="subjects"></div>
+
+    <script type="text/javascript">
+      function callApi() {
+        let responseData = [];
+
+        const subjects = document.getElementById("subjects");
+        const subject_name = document.getElementById("subject_name");
+        const no_of_questions = document.getElementById("no_of_questions");
+        const attempted = document.getElementById("attempted");
+
+        fetch("https://www.edudigm.in/dummy.json")
+          .then((response) => response.json())
+          .then((data) => {
+            responseData = [...data.response_data.subjects[0].chapters];
+            console.log("responseData", responseData);
+
+            for (let i = 0; i < responseData.length; i++) {
+              const { chapter_name, no_of_questions, attempted } =
+                responseData[i];
+              console.log(responseData[i].chapter_name);
+              const subject = document.createElement("div");
+              const chapterName = document.createElement("h3");
+              const noOfQuestions = document.createElement("p");
+              const attempt = document.createElement("p");
+
+              chapterName.innerText = chapter_name;
+              noOfQuestions.innerText = `Questions:${no_of_questions} `;
+              attempt.innerText = `Attempted:${attempted}  `;
+
+              subject.appendChild(chapterName);
+              subject.appendChild(noOfQuestions);
+              subject.appendChild(attempt);
+
+              subjects.append(subject);
+            }
+          })
+          .catch((err) => console.error(err));
+      }
+      window.onload = callApi;
+    </script>
+  </body>
+</html>
+
+
